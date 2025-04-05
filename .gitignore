@@ -1,0 +1,43 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+
+# Escludi le configurazioni di PyCharm
+.idea/
+
+# Escludi i file di cache di Python
+pycache/
+*.pyc
+*.pyo
+*.pyd
+
+tests/__pycache__
+tests/BDR/__pycache__
+__pycache__/
+OurApp/
+
+# Escludi i log ed eventuali file temporanei
+*.log
+*.tmp
+*.swp
+
+# Escludi gli ambienti virtuali
+venv/
+.env/
+env/
+.env
+.venv/
+
+# Escludi le dipendenze installate con pip (se esiste)
+*.egg-info/
+dist/
+build/
+
+# Escludi i file di configurazione specifici di VS Code
+.vscode/
+
+# Escludi i file di configurazione di sistema
+.DS_Store
+Thumbs.db
+
+.png
