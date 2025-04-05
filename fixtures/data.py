@@ -1,3 +1,5 @@
+## Here you can put DATA or other fixtures useful for your own tests or script
+
 iban = {
     "ibanItaGenerico":"IT27G0300203280224598938389",
     "ibanEsteroSepa":"FR7612345678900001234567858",
