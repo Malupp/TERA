@@ -14,7 +14,6 @@ pycache/
 tests/__pycache__
 tests/BDR/__pycache__
 __pycache__/
-OurApp/
 
 # Escludi i log ed eventuali file temporanei
 *.log

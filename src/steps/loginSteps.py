@@ -1,18 +1,22 @@
 from config import requestsUrl
 from src.pages.googleSearch import GoogleSearch
-from functions.interactions import *
+from src.functions.interactions import Interactions
 class LoginSteps:
+    def __init__(self, driver):
+        self.driver = driver  # Store the driver for reuse
 
     @staticmethod
     def navigateTo(site):
         requestsUrl.getURL(f'{site}')
 
-    def loginExample(self):
+    @staticmethod
+    def loginExample():
         try:
-            self.navigateTo("www.google.it")
-            Interactions.click_element(GoogleSearch.searchButton)
+            LoginSteps.navigateTo("www.google.it")
+            Interactions.click_element(GoogleSearch.rifiutaTutto)
+            Interactions.input_text(GoogleSearch.inputArea, "Demo")
+            Interactions.press_enter()
 
         except Exception as e:
-            # se qualcosa non va lo dice qui
             print(f"ERRORE: {e}")
         

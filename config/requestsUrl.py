@@ -15,13 +15,17 @@ def getPrivateURL(url_key):
     time.sleep(5)
     return
 
-def getURL(url_key):
+
+def getURL(url):
     driver = WebDriverManager.return_driver()
-    url = url_key
     if not url:
         raise ValueError("URL not specified")
-    # print(url)
+
+    # Ensure URL starts with http:// or https://
+    if not url.startswith(("http://", "https://")):
+        url = f"https://{url}"  # Default to HTTPS
+
     driver.get(url)
     driver.maximize_window()
-    time.sleep(5)
+    time.sleep(5)  # Consider replacing with WebDriverWait for better reliability
     return

@@ -48,6 +48,22 @@ class Interactions:
             print(f"Element not clicked: {xpath}")
 
     @staticmethod
+    def click_with_retry(xpath, timeout=5, retries=3):
+        driver = WebDriverManager.return_driver()
+        for attempt in range(retries):
+            try:
+                element = WebDriverWait(driver, timeout).until(
+                    EC.element_to_be_clickable((By.XPATH, xpath))
+                )
+                element.click()
+                return True
+            except Exception as e:
+                if attempt == retries - 1:  # Last attempt
+                    raise
+                time.sleep(1)  # Brief pause before retry
+        return False
+
+    @staticmethod
     def scroll_to_element(xpath):
         elem = Interactions.find_element(xpath)
         actions = ActionChains(WebDriverManager.return_driver())
@@ -77,8 +93,11 @@ class Interactions:
             elem = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, xpath)))
             WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, xpath)))
             elem.click()
+            print(f"clicking the element...{xpath}")
             elem.clear()
+            print(f"clearing the input text...{xpath}")
             elem.send_keys(text)
+            print(f"sending text in...{xpath}")
         except Exception as e:
             print(f"Error to input the text in '{xpath}': {e}")
 
