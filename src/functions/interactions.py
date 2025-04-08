@@ -8,9 +8,10 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
 from datetime import datetime
-import time, os
+import time, os, random, string
 
 from config.driver import WebDriverManager
+
 
 class Interactions:
     contatoreScreenshot = 1
@@ -36,6 +37,57 @@ class Interactions:
                 print(f"Element clicked: {xpath}")
         except NoSuchElementException:
             print(f"Element not clicked: {xpath}")
+
+    @staticmethod
+    def click_element_by_text(text):
+        try:
+            xpath = (
+                f"//*[contains(text(), '{text}')]"
+                f"|//*[contains(text(), '{text.lower()}')]"
+                f"|//*[contains(text(), '{text.upper()}')]"
+            )
+            elem = Interactions.find_element(xpath)
+            if elem:
+                Interactions.wait(2)
+                elem.click()
+                Interactions.wait(2)
+                print(f"Element clicked with text: {text}")
+        except NoSuchElementException:
+            print(f"Element not clicked: {text}")
+
+    @staticmethod
+    def check_element_by_text(text):
+        xpath = (
+            f"//*[contains(text(), '{text}')]"
+            f"|//*[contains(text(), '{text.lower()}')]"
+            f"|//*[contains(text(), '{text.upper()}')]"
+        )
+        try:
+            elem = Interactions.find_element(xpath)
+            if elem:
+                print(f"Element found with text: {text}")
+                return True
+        except NoSuchElementException:
+            pass
+        print(f"Element not found: {text}")
+        return False
+
+    @staticmethod
+    def check_element_by_placeholder(text):
+        xpath = (
+            f"//*[[contains(@placeholder, '{text}')]"
+            f"|//*[contains(@placeholder, '{text.lower()}')]"
+            f"|//*[contains(@placeholder, '{text.upper()}')]"
+        )
+        try:
+            elem = Interactions.find_element(xpath)
+            if elem:
+                print(f"Element found with placeholder: {text}")
+                return True
+        except NoSuchElementException:
+            pass
+        print(f"Element not found (placeholder): {text}")
+        return False
 
     @staticmethod
     def click_if_present(xpath):
@@ -100,6 +152,27 @@ class Interactions:
             print(f"sending text in...{xpath}")
         except Exception as e:
             print(f"Error to input the text in '{xpath}': {e}")
+
+    @staticmethod
+    def input_text_by_placeholder(placeholder_text, text_to_send):
+        try:
+            xpath = (
+                f"//*[contains(@placeholder, '{placeholder_text}')]"
+                f"|//*[contains(@placeholder, '{placeholder_text.lower()}')]"
+                f"|//*[contains(@placeholder, '{placeholder_text.upper()}')]"
+            )
+            driver = WebDriverManager.return_driver()
+            elem = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, xpath)))
+            WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, xpath)))
+
+            elem.click()
+            print(f"Clicking input with placeholder: {placeholder_text}")
+            elem.clear()
+            print(f"Clearing input with placeholder: {placeholder_text}")
+            elem.send_keys(text_to_send)
+            print(f"Sending text '{text_to_send}' to input with placeholder: {placeholder_text}")
+        except Exception as e:
+            print(f"Error to input text in field with placeholder '{placeholder_text}': {e}")
 
     @staticmethod
     def input_text_force(xpath, text):
@@ -172,8 +245,21 @@ class Interactions:
         except NoSuchElementException:
             print(f"Element not found: {xpath}")
             return None
-        
+
     @staticmethod
     def refreshing_page():
         WebDriverManager.return_driver().navigate().refresh()
         print("Reloading browser page...")
+
+    @staticmethod
+    def importoRandom():
+        # Genera un numero con la virgola a 2 cifre da 1 a 100
+        importo = round(random.uniform(1, 100), 2)
+        print(importo)
+        return importo
+
+    @staticmethod
+    def randomText():
+        text = ''.join(random.choices(string.ascii_lowercase, k=5))
+        return text
+
