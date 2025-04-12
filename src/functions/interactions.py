@@ -8,10 +8,12 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
 from datetime import datetime
+import pyautogui
 import time, os, random, string
 
-from config.driver import WebDriverManager
+from twisted.web.domhelpers import findElements
 
+from config.driver import WebDriverManager
 
 class Interactions:
     contatoreScreenshot = 1
@@ -54,6 +56,7 @@ class Interactions:
                 print(f"Element clicked with text: {text}")
         except NoSuchElementException:
             print(f"Element not clicked: {text}")
+
 
     @staticmethod
     def check_element_by_text(text):
@@ -245,11 +248,21 @@ class Interactions:
         except NoSuchElementException:
             print(f"Element not found: {xpath}")
             return None
-
+        
     @staticmethod
     def refreshing_page():
-        WebDriverManager.return_driver().navigate().refresh()
+        WebDriverManager.return_driver().refresh()
         print("Reloading browser page...")
+
+    @staticmethod
+    def go_forward():
+        WebDriverManager.return_driver().forward()
+        print("Going to the next page...")
+
+    @staticmethod
+    def go_back():
+        WebDriverManager.return_driver().back()
+        print("Going to the previous page...")
 
     @staticmethod
     def importoRandom():
@@ -263,3 +276,45 @@ class Interactions:
         text = ''.join(random.choices(string.ascii_lowercase, k=5))
         return text
 
+    @staticmethod
+    def return_title_site():
+        WebDriverManager.return_driver().title()
+
+    @staticmethod
+    def get_source_page():
+        WebDriverManager.return_driver().page_source()
+
+    @staticmethod
+    def get_location_element(xpath):
+        elem = Interactions.find_element(xpath)
+        if elem and elem.is_displayed():
+            Interactions.wait(2)
+            point = elem.location
+            print(f"X coordinate: {point['x']} Y coordinate: {point['y']}")
+
+    @staticmethod
+    def click_by_coordinates(x, y):
+        screen_width, screen_height = pyautogui.size()
+        if 0 <= x <= screen_width and 0 <= y <= screen_height:
+            print(f"Clicking X: {x}, Y: {y} (Resolution: {screen_width}x{screen_height})")
+            Interactions.wait(2)
+            #The mouse will hover over the indicated position
+            pyautogui.moveTo(x, y)
+            pyautogui.click()
+        else:
+            print(f"Coordinates out of window: X={x}, Y={y}")
+
+    @staticmethod
+    def click_if_enabled(xpath):
+        try:
+            elem = Interactions.find_element(xpath)
+            if elem.is_displayed():
+                if elem.is_enabled():
+                    elem.click()
+                    print(f"Clicked on: {xpath}")
+                else:
+                    print(f"Element is disabled: {xpath}")
+            else:
+                print(f"Element is not visible: {xpath}")
+        except NoSuchElementException:
+            print(f"Element not found: {xpath}")

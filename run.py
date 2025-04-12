@@ -6,20 +6,20 @@ if __name__ == "__main__":
     browser = sys.argv[1].lower() if len(sys.argv) > 1 else "chrome"
     test_path = sys.argv[2] if len(sys.argv) > 2 else None
 
-    print(f"[DEBUG] Browser indicato: {browser}")
-    print(f"[DEBUG] Test indicato: {test_path}")
+    print(f"[DEBUG] Browser specified: {browser}")
+    print(f"[DEBUG] Test specified: {test_path}")
 
     if not test_path:
-        print("Errore: specifica un modulo da eseguire (es: OurApp.enrollment)")
+        print("Error: specify a module to execute")
         sys.exit(1)
 
-    # Inizializza il driver
+    # Initialize the driver
     driver = WebDriverManager.get_driver(browser)
 
-    # Costruzione del path dinamico (da test_path tipo "OurApp.enrollment")
+    # Dynamic path construction
     try:
         mod = importlib.import_module(f"tests.{test_path}")
-        print(f"[DEBUG] Import riuscito: tests.{test_path}")
+        print(f"[DEBUG] Test completed: tests.{test_path}")
     except ModuleNotFoundError:
-        print(f"[ERRORE] Modulo 'tests.{test_path}' non trovato.")
+        print(f"[ERROR] Module 'tests.{test_path}' not found.")
         sys.exit(1)
